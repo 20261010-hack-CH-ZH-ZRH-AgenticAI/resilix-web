@@ -5,7 +5,8 @@ export const AudioSegmentSchema = z.object({
   speaker: z.string(),
   start: z.number(),
   end: z.number(),
-  text: z.string().optional(),
+  text: z.string().nullish(),
+  alignment: z.literal("unresolved").optional(),
   overlap: z.boolean().optional(),
 });
 export type AudioSegment = z.infer<typeof AudioSegmentSchema>;
