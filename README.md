@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Resilix web
 
-## Getting Started
+Resilix is a Bun / Next.js / TypeScript PWA for source-linked hazard awareness, private observations, conversational AI, and human-reviewed preparedness simulations. The public pitch deck is `/deck/JO202610101600`.
 
-First, run the development server:
+## Run locally
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```sh
+cp .env.example .env
+bun install --frozen-lockfile
+bun run build
+bun run start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The default `.env.example` starts the web server on port 3000 and expects the backend on port 8080. `bun run dev` uses the same custom server. `/api/health` is the web liveness endpoint. `/api/config` exposes only map configuration. The custom server proxies bidirectional `/api/events` WebSockets; the App Router proxies approved API routes and forwards session cookies and CSRF tokens.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+All network configuration is read from `runtime-config.mjs`, so a Docker image can move between environments without rebuilding public environment variables. Set `API_BASE_URL` to the backend origin. Configure `MAP_TILE_URL`, `MAP_ATTRIBUTION`, and `MAP_ATTRIBUTION_URL` together. `CSP_CONNECT_ORIGINS` is an explicit space-separated list of HTTPS/WSS provider origins; include the actual OpenAI or Azure realtime origin and Gemini Live origin used by core. No provider key is read by this app.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+`docker-compose.yml` is for local development only. Production uses Azure Container Apps through the separate infrastructure repository. Each Docker build uses only this repository as its context.
 
-## Learn More
+## Product paths
 
-To learn more about Next.js, take a look at the following resources:
+- `/` — landing page, authentication and one-click isolated demo session; after authentication, the workspace.
+- `/app` — workspace entry with the same authentication boundary.
+- `/login` — public entry to the same sign-in experience.
+- `/deck/JO202610101600` — nine-slide EN / ES / DE / FR deck, keyboard controls, fullscreen and print layout.
+- The authenticated sidebar contains overview, geographic map, assistant, private alerts, and human-reviewed simulation proposals.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The backend creates a fresh demo account per demo request. There is no shared hardcoded demo password. Sessions use HttpOnly cookies; CSRF tokens live in memory. Private reports are read, created and deleted through owner-scoped backend endpoints. The UI never broadcasts them itself.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## AI and media
 
-## Deploy on Vercel
+The backend catalog drives text-model selection. Auto routing stays a server responsibility. Chat responses render bounded structured cards and validated HTTPS source links. Generated images use provider-returned PNG bytes and carry an illustration label. They are not verified maps or safe evacuation routes.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+OpenAI is the default voice provider. Both speech conversation and `gpt-live-transcribe` dictation negotiate WebRTC with ephemeral credentials obtained from core through the backend. Gemini Live is an explicitly selected backup: the browser sends mono PCM16 at 16 kHz and plays PCM16 responses at 24 kHz. Microphone capture starts only after the user activates a voice control and stops on hang-up, navigation away from chat, or component teardown. A provider or permission failure is visible; the UI does not silently substitute a different provider.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The Gemini browser bridge uses `ScriptProcessorNode` for the bounded prototype audio path. Real-device latency, echo behavior, interruption handling and browser-specific sample-rate support require device testing; a successful build or ephemeral token request does not prove a complete voice conversation.
+
+## Sources and privacy
+
+Public reports include source, observation time and simulation state. Adapter status, checked time and coverage are shown separately. USGS earthquake observations are worldwide; MeteoSwiss coverage is limited to the postal area configured in the backend. Empty or unavailable feeds are not an all-clear. Personal map markers are shown only when valid coordinates exist. Swisstopo tile requests use CORS and display attribution.
+
+The service worker caches only the public offline page, icon and manifest. It never caches API requests, authenticated HTML, private reports, conversations, or audio. Only theme and interface language are stored in localStorage. Offline navigation returns a public four-language reconnection screen.
+
+The web sends strict CSP with per-request nonces, anti-framing, no-sniff, referrer controls, COOP/COEP/CORP, and explicit microphone/geolocation permissions. AI and report content are rendered as text, never as raw HTML. The reverse proxy accepts a bounded route allowlist and checks cross-origin mutation requests.
+
+## Independent UI packages
+
+The main app consumes versioned source tarballs in `vendor/`:
+
+- `@resilix/ui-components`: buttons, icons, badges and metrics.
+- `@resilix/ui-chat`: composer and structured answer cards.
+- `@resilix/ui-canvas`: attributed geographic map and coordinate projection.
+
+Each source repository runs its own Next.js showcase and tests. Tarballs contain the actual reusable components; the application imports the packages and Next.js transpiles them. No production import or build step reaches into a sibling checkout. To update a package, bump its version, pack it with `bun pm pack`, copy it into this app’s `vendor/`, and run `bun add ./vendor/<archive>.tgz`.
+
+The visual language follows the supplied gray/lime chat references: a fixed dark navigation rail, neutral surfaces, restrained rounded cards, source labels, compact controls and light/dark themes. CSS Modules are the sole component styling approach. Global design tokens and resets live in `src/styles/globals.css`; translations and deck copy have complete sibling language files.
+
+## Verification
+
+```sh
+bun test
+bun run lint
+bun run build
+```
+
+Tests cover four-language/deck parity, alert input validation, unsafe source URL rejection, source-card schema, sensitive-data service-worker exclusions, and PCM encoding. UI repositories additionally test their rendered security/accessibility contracts and coordinate projection. Run these commands within each repository; the root also contains unrelated reference repositories whose dependencies are not installed as part of this application.
+
+The public interface is a hackathon prototype for awareness and preparation. Resilix does not contact emergency responders, certify routes, make medical decisions, or issue real alerts. An approved workflow records a clearly labelled simulated acknowledgement. Provider credentials, source coverage, deployment state and physical microphone verification must be assessed separately from software build results.

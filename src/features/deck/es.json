@@ -1,0 +1,112 @@
+[
+  {
+    "kind": "hero",
+    "accent": true,
+    "label": "RESILIX / INTELIGENCIA DE EMERGENCIAS",
+    "title": "Claridad cuando\nimporta.",
+    "body": "Un espacio conectado para comprender los riesgos y preparar el siguiente paso.",
+    "points": ["Agentic AI Hack · Zúrich", "10 de octubre de 2026"],
+    "footnote": "Prototipo de hackathon. Los servicios de emergencia mantienen la responsabilidad de la respuesta."
+  },
+  {
+    "kind": "problem",
+    "label": "01 / EL MOMENTO",
+    "title": "La situación cambia.\nLa información se dispersa.",
+    "body": "Bajo presión, las personas deben reunir avisos meteorológicos, observaciones locales e instrucciones desconocidas.",
+    "points": [
+      "Fuentes diferentes",
+      "Vigencia poco clara",
+      "Alta carga cognitiva"
+    ],
+    "footnote": "Hipótesis basada en el caso de uso facilitado; falta investigación con usuarios."
+  },
+  {
+    "kind": "flow",
+    "label": "02 / UN ESPACIO",
+    "title": "Ver. Comprender.\nPrepararse.",
+    "body": "Resilix reúne informes públicos, observaciones personales y un asistente conversacional en un solo flujo.",
+    "points": [
+      "Mapa con fuentes",
+      "Alertas privadas del usuario",
+      "Orientación IA estructurada"
+    ],
+    "footnote": "Un listado público vacío no significa ausencia de peligro. Las carencias se muestran."
+  },
+  {
+    "kind": "flow",
+    "accent": true,
+    "label": "03 / LA CONVERSACIÓN",
+    "title": "Habla con naturalidad.\nGana claridad.",
+    "body": "Texto, voz en vivo, dictado, tarjetas estructuradas e ilustraciones comparten el mismo asistente.",
+    "points": [
+      "Selección y enrutamiento de modelos",
+      "Sesiones WebRTC efímeras",
+      "Cuatro idiomas"
+    ],
+    "footnote": "La disponibilidad se consulta en ejecución. Las ilustraciones no son mapas ni rutas certificadas."
+  },
+  {
+    "kind": "privacy",
+    "label": "04 / LÍMITES DE CONFIANZA",
+    "title": "Privacidad desde el diseño.\nDecisiones humanas.",
+    "body": "La información pública se distingue de los informes privados. El asistente ayuda a razonar, no moviliza servicios.",
+    "points": [
+      "Propiedad verificada en servidor",
+      "Sin caché privada sin conexión",
+      "Fuentes, fechas, limitaciones"
+    ],
+    "footnote": "La voz y el texto se envían al proveedor IA al usarlos. No se afirma certificación de cumplimiento."
+  },
+  {
+    "kind": "architecture",
+    "label": "05 / EL SISTEMA",
+    "title": "Un camino controlado\ndel contexto a la respuesta.",
+    "body": "La web independiente se conecta por un backend Rust a un núcleo IA aislado. Las claves permanecen en el núcleo.",
+    "points": [
+      "Next.js · PWA · WebRTC",
+      "Backend Rust · WebSocket",
+      "Pasarela OpenClaw → núcleo IA Rust",
+      "Azure Container Apps · Terraform"
+    ],
+    "footnote": "Arquitectura objetivo. El despliegue y los proveedores se deben verificar en cada entorno."
+  },
+  {
+    "kind": "roadmap",
+    "label": "06 / EL PRIMER PILOTO",
+    "title": "Empieza por prepararse.\nGana confianza operativa.",
+    "body": "Prueba un flujo de preparación acotado con un equipo de seguridad local y mide la comprensión de la situación.",
+    "points": [
+      "Usuarios: residentes y equipos de campo",
+      "Socios piloto: organizaciones locales",
+      "Medir claridad, latencia y cobertura",
+      "Explorar suscripción por organización"
+    ],
+    "footnote": "Hipótesis comercial. No se afirman clientes, ingresos, precios validados ni acuerdos con emergencias."
+  },
+  {
+    "kind": "roadmap",
+    "label": "07 / LO SIGUIENTE",
+    "title": "Validar antes\nde automatizar.",
+    "body": "El siguiente paso es mejorar las evidencias, evaluar con seguridad y realizar un piloto supervisado.",
+    "points": [
+      "Verificar vigencia y cobertura de fuentes",
+      "Evaluar respuestas en cuatro idiomas",
+      "Probar la voz en dispositivos reales",
+      "Validar permisos y flujos de incidentes"
+    ],
+    "footnote": "El despacho autónomo, las rutas certificadas y la predicción por cámaras requieren validación adicional."
+  },
+  {
+    "kind": "hero",
+    "accent": true,
+    "label": "RESILIX / CONSTRUYAMOS RESILIENCIA",
+    "title": "Un siguiente paso claro.\nJuntos.",
+    "body": "Explora la demo. Cuestiona las hipótesis. Ayuda a crear un asistente más seguro y útil.",
+    "points": [
+      "Contexto público",
+      "Observaciones privadas",
+      "Decisiones humanas"
+    ],
+    "footnote": "En una emergencia inmediata, llama al 112. Resilix no contacta con emergencias."
+  }
+]

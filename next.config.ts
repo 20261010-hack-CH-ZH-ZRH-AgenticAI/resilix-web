@@ -1,18 +1,13 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  cacheComponents: true,
-  partialPrefetching: true,
   reactCompiler: true,
-  turbopack: {
-    rules: {
-      "*.css": {
-        loaders: ["@tailwindcss/turbopack"],
-        as: "*.css",
-      },
-    },
-  },
+  poweredByHeader: false,
+  productionBrowserSourceMaps: false,
+  transpilePackages: [
+    "@resilix/ui-components",
+    "@resilix/ui-chat",
+    "@resilix/ui-canvas",
+  ],
 };
-
 export default nextConfig;

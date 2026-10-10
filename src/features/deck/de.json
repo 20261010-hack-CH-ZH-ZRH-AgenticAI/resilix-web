@@ -1,0 +1,112 @@
+[
+  {
+    "kind": "hero",
+    "accent": true,
+    "label": "RESILIX / SCHWEIZER NOTFALLINTELLIGENZ",
+    "title": "Klarheit, wenn\nes zählt.",
+    "body": "Ein ruhiger, vernetzter Arbeitsbereich, um Gefahren zu verstehen und den nächsten Schritt vorzubereiten.",
+    "points": ["Agentic AI Hack · Zürich", "10. Oktober 2026"],
+    "footnote": "Hackathon-Prototyp. Die Verantwortung für Einsätze bleibt bei den Rettungsdiensten."
+  },
+  {
+    "kind": "problem",
+    "label": "01 / DER MOMENT",
+    "title": "Die Lage verändert sich.\nInformationen sind verstreut.",
+    "body": "Unter Druck müssen Menschen Wetterwarnungen, lokale Beobachtungen und unbekannte Hinweise zusammenführen.",
+    "points": [
+      "Unterschiedliche Quellen",
+      "Unklare Aktualität",
+      "Hohe kognitive Belastung"
+    ],
+    "footnote": "Problemhypothese aus dem vorgegebenen Anwendungsfall; Nutzerforschung steht noch aus."
+  },
+  {
+    "kind": "flow",
+    "label": "02 / EIN ARBEITSBEREICH",
+    "title": "Sehen. Verstehen.\nVorbereiten.",
+    "body": "Resilix verbindet öffentliche Meldungen, persönliche Beobachtungen und einen Dialogassistenten in einem Ablauf.",
+    "points": [
+      "Lagekarte mit Quellen",
+      "Persönliche Meldungen nur für Eigentümer",
+      "Strukturierte KI-Hinweise"
+    ],
+    "footnote": "Eine leere Liste ist keine Entwarnung. Fehlende Daten werden ausdrücklich angezeigt."
+  },
+  {
+    "kind": "flow",
+    "accent": true,
+    "label": "03 / DAS GESPRÄCH",
+    "title": "Natürlich sprechen.\nKlarer sehen.",
+    "body": "Text, Live-Sprache, Diktat, strukturierte Karten und generierte Bilder nutzen dieselbe Assistentenoberfläche.",
+    "points": [
+      "Modellauswahl und Routing",
+      "Kurzlebige WebRTC-Sitzungen",
+      "Vier Oberflächensprachen"
+    ],
+    "footnote": "Anbieterverfügbarkeit wird zur Laufzeit geprüft. Generierte Bilder sind keine geprüften Karten oder Fluchtrouten."
+  },
+  {
+    "kind": "privacy",
+    "label": "04 / VERTRAUENSGRENZEN",
+    "title": "Privatsphäre im Design.\nMenschen entscheiden.",
+    "body": "Öffentliche Informationen bleiben von privaten Meldungen getrennt. Der Assistent hilft beim Denken, alarmiert aber keine Einsatzkräfte.",
+    "points": [
+      "Serverseitige Eigentumsprüfung",
+      "Kein privater Offline-Cache",
+      "Quellen, Zeitangaben, Grenzen"
+    ],
+    "footnote": "Sprache und Text werden bei Nutzung an den KI-Anbieter gesendet. Eine formale Konformitätsprüfung ist nicht Teil des Prototyps."
+  },
+  {
+    "kind": "architecture",
+    "label": "05 / DAS SYSTEM",
+    "title": "Ein kontrollierter Weg\nvom Kontext zur Antwort.",
+    "body": "Eine unabhängige Webschicht verbindet sich über ein Rust-Backend mit dem isolierten KI-Kern. Anbieterschlüssel bleiben im Kern.",
+    "points": [
+      "Next.js · PWA · WebRTC",
+      "Rust-Backend · WebSocket",
+      "OpenClaw-Gateway → Rust-KI-Kern",
+      "Azure Container Apps · Terraform"
+    ],
+    "footnote": "Zielarchitektur. Bereitstellung und Anbieterprüfungen müssen je Umgebung verifiziert werden."
+  },
+  {
+    "kind": "roadmap",
+    "label": "06 / DER ERSTE PILOT",
+    "title": "Mit Vorbereitung starten.\nOperatives Vertrauen gewinnen.",
+    "body": "Einen klar begrenzten Vorbereitungsablauf mit einem lokalen Sicherheitsteam testen und das Lageverständnis messen.",
+    "points": [
+      "Nutzer: Bevölkerung und Außenteams",
+      "Pilotpartner: lokale Sicherheitsorganisationen",
+      "Klarheit, Latenz und Quellenabdeckung messen",
+      "Organisationsabonnement prüfen"
+    ],
+    "footnote": "Geschäftshypothese. Keine Kunden, Umsätze, validierten Preise oder Rettungsdienstpartnerschaften werden behauptet."
+  },
+  {
+    "kind": "roadmap",
+    "label": "07 / DIE NÄCHSTEN SCHRITTE",
+    "title": "Validieren, bevor\nwir automatisieren.",
+    "body": "Als Nächstes stehen bessere Evidenz, sichere Evaluation und ein menschlich geprüfter Pilot an.",
+    "points": [
+      "Aktualität und Quellenabdeckung prüfen",
+      "Antworten in vier Sprachen prüfen",
+      "Sprache auf realen Geräten testen",
+      "Berechtigungen und Vorfallsabläufe validieren"
+    ],
+    "footnote": "Autonome Alarmierung, geprüfte Fluchtrouten und kamerabasierte Vorhersagen benötigen weitere Validierung."
+  },
+  {
+    "kind": "hero",
+    "accent": true,
+    "label": "RESILIX / RESILIENZ GEMEINSAM STÄRKEN",
+    "title": "Ein klarer nächster Schritt.\nGemeinsam.",
+    "body": "Entdecke die Demo. Hinterfrage die Annahmen. Gestalte einen sichereren, nützlicheren Assistenten mit.",
+    "points": [
+      "Öffentlicher Kontext",
+      "Private Beobachtungen",
+      "Menschliche Entscheidungen"
+    ],
+    "footnote": "Bei einem akuten Notfall 112 anrufen. Resilix verständigt keine Rettungsdienste."
+  }
+]

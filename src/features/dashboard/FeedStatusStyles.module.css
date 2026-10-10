@@ -1,0 +1,52 @@
+.feed {
+  margin: 0 0 var(--space-5);
+  font-size: var(--text-xs);
+  color: var(--secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  padding: var(--space-3) var(--space-4);
+}
+.feed summary {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  cursor: pointer;
+  list-style: none;
+}
+.feed summary:after {
+  content: "+";
+  margin-left: auto;
+}
+.feed[open] summary:after {
+  content: "−";
+}
+.feed summary > span {
+  font-size: 0.6rem;
+  margin-left: var(--space-1);
+}
+.sources {
+  display: grid;
+  gap: var(--space-3);
+  padding-top: var(--space-4);
+}
+.sources > div {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border-radius: var(--radius-sm);
+  background: var(--background);
+}
+.sources strong {
+  font-size: var(--text-xs);
+  color: var(--foreground);
+}
+.sources p {
+  width: 100%;
+  margin: 0;
+}
+.sources > div > span:last-child {
+  font-size: 0.6rem;
+}

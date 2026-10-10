@@ -1,0 +1,104 @@
+[
+  {
+    "kind": "hero",
+    "accent": true,
+    "label": "RESILIX / SWISS EMERGENCY INTELLIGENCE",
+    "title": "Clarity when\nit matters.",
+    "body": "A calm, connected workspace for understanding hazards and preparing the next step.",
+    "points": ["Agentic AI Hack · Zürich", "10 October 2026"],
+    "footnote": "Hackathon prototype. Emergency services retain responsibility for emergency response."
+  },
+  {
+    "kind": "problem",
+    "label": "01 / THE MOMENT",
+    "title": "The situation changes.\nThe context is scattered.",
+    "body": "People must piece together weather warnings, local observations, and unfamiliar guidance while under pressure.",
+    "points": ["Different sources", "Unclear freshness", "High cognitive load"],
+    "footnote": "Problem hypothesis based on the supplied emergency-assistant use case; user research is still needed."
+  },
+  {
+    "kind": "flow",
+    "label": "02 / ONE WORKSPACE",
+    "title": "See. Understand.\nPrepare.",
+    "body": "Resilix brings public reports, personal observations, and a conversational assistant into one focused workflow.",
+    "points": [
+      "Source-linked situation map",
+      "Owner-only personal alerts",
+      "Structured AI guidance"
+    ],
+    "footnote": "An empty public feed is not an all-clear. Missing and unavailable data remain explicit."
+  },
+  {
+    "kind": "flow",
+    "accent": true,
+    "label": "03 / THE CONVERSATION",
+    "title": "Speak naturally.\nGet a clearer picture.",
+    "body": "Text, live voice, live dictation, structured cards, and generated illustrations share the same assistant surface.",
+    "points": [
+      "Model selection and routing",
+      "Short-lived WebRTC sessions",
+      "Four interface languages"
+    ],
+    "footnote": "Provider availability is checked at runtime. Generated illustrations are not certified maps or evacuation routes."
+  },
+  {
+    "kind": "privacy",
+    "label": "04 / TRUST BOUNDARIES",
+    "title": "Private by design.\nHuman by decision.",
+    "body": "Public information stays distinct from private reports. The assistant helps reason; it does not dispatch responders.",
+    "points": [
+      "Server-enforced ownership",
+      "No private offline cache",
+      "Sources, timestamps, limitations"
+    ],
+    "footnote": "Voice and text are sent to the selected AI provider when used. Formal compliance certification is outside this prototype."
+  },
+  {
+    "kind": "architecture",
+    "label": "05 / THE SYSTEM",
+    "title": "One controlled path\nfrom context to answer.",
+    "body": "An independent web layer connects through a Rust backend to an isolated AI core. Provider credentials stay in the core.",
+    "points": [
+      "Next.js · PWA · WebRTC",
+      "Rust backend · WebSocket",
+      "OpenClaw gateway → Rust AI core",
+      "Azure Container Apps · Terraform"
+    ],
+    "footnote": "Target architecture. Deployment and provider checks must be verified for each environment."
+  },
+  {
+    "kind": "roadmap",
+    "label": "06 / THE FIRST PILOT",
+    "title": "Start with readiness.\nEarn operational trust.",
+    "body": "Test one bounded preparation workflow with a local safety team, then measure whether people understand the situation better.",
+    "points": [
+      "Users: residents and field teams",
+      "Pilot partners: local safety organizations",
+      "Measure clarity, latency, source coverage",
+      "Explore an organization subscription"
+    ],
+    "footnote": "Commercial hypothesis. No customers, revenue, pricing validation, or emergency-service partnership is claimed."
+  },
+  {
+    "kind": "roadmap",
+    "label": "07 / WHAT COMES NEXT",
+    "title": "Validate before\nwe automate.",
+    "body": "The next step is better evidence, safer evaluation, and a human-reviewed operational pilot.",
+    "points": [
+      "Verify source freshness and coverage",
+      "Evaluate answers in four languages",
+      "Test voice on real devices",
+      "Validate permissions and incident workflows"
+    ],
+    "footnote": "Autonomous dispatch, certified evacuation routing, and camera-based hazard prediction require further validation."
+  },
+  {
+    "kind": "hero",
+    "accent": true,
+    "label": "RESILIX / LET’S BUILD RESILIENCE",
+    "title": "A clearer next step.\nTogether.",
+    "body": "Explore the demo. Challenge the assumptions. Help shape a safer, more useful assistant.",
+    "points": ["Public context", "Private observations", "Human decisions"],
+    "footnote": "In an immediate emergency, call 112. Resilix does not contact emergency services."
+  }
+]

@@ -3,23 +3,31 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "node --env-file-if-exists=.env server.mjs --dev",
     "build": "next build",
-    "start": "next start",
+    "start": "node --env-file-if-exists=.env server.mjs",
     "lint": "biome check",
-    "format": "biome format --write"
+    "format": "biome format --write",
+    "test": "bun test"
   },
   "dependencies": {
+    "@resilix/ui-canvas": "./vendor/resilix-ui-canvas-0.1.2.tgz",
+    "@resilix/ui-chat": "./vendor/resilix-ui-chat-0.1.1.tgz",
+    "@resilix/ui-components": "./vendor/resilix-ui-components-0.1.1.tgz",
     "next": "16.4.0",
     "react": "19.3.0",
-    "react-dom": "19.3.0"
+    "react-dom": "19.3.0",
+    "ws": "8.22.0",
+    "zod": "4.6.5"
   },
   "devDependencies": {
     "@biomejs/biome": "2.4.2",
     "@tailwindcss/turbopack": "^4",
+    "@types/bun": "1.4.2",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/ws": "8.18.2",
     "babel-plugin-react-compiler": "1.0.0",
     "tailwindcss": "^4",
     "typescript": "^5"
