@@ -12,6 +12,7 @@ export function proxy(request: NextRequest) {
     `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'`,
     `style-src 'self' 'nonce-${nonce}'`,
     `img-src 'self' data: ${tileOrigin}`,
+    `media-src 'self' blob:`,
     `font-src 'self'`,
     `connect-src 'self' ${allowed.join(" ")}`,
     `object-src 'none'`,

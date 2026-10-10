@@ -2,7 +2,7 @@ import { type NextRequest, NextResponse } from "next/server";
 import { getConfig } from "@/lib/config";
 
 const ALLOWED =
-  /^(auth\/(demo|login|register|session|logout)|alerts(\/personal(\/[a-zA-Z0-9-]+)?)?|chat|models|images|transcribe|realtime\/session|sources|workflows(\/[a-zA-Z0-9-]+\/decision)?)$/;
+  /^(auth\/(demo|login|register|session|logout)|alerts(\/personal(\/[a-zA-Z0-9-]+)?)?|chat|models|images|speech|audio-transcribe|diarize|routes|incidents(\/[a-zA-Z0-9-]+(\/steer)?)?|transcribe|realtime\/session|sources|workflows(\/[a-zA-Z0-9-]+\/decision)?)$/;
 async function proxy(
   request: NextRequest,
   context: { params: Promise<{ path: string[] }> },
