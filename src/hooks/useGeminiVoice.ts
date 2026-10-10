@@ -1,39 +1,14 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { z } from "zod";
 import { request } from "@/lib/api/client";
+import { MessageSchema, SessionSchema } from "@/lib/realtime/geminiSchemas";
 import { decodePcm16, encodePcm16 } from "@/lib/realtime/pcm";
+import {
+  microphoneConstraints,
+  type TranscriptHandler,
+  type VoiceOptions,
+} from "@/lib/realtime/voiceTypes";
 
-const SessionSchema = z.object({
-  provider: z.literal("gemini"),
-  model: z.string(),
-  client_secret: z.object({ value: z.string() }),
-  websocket_url: z.string().url(),
-  setup: z.record(z.string(), z.unknown()),
-});
-const MessageSchema = z.object({
-  setupComplete: z.unknown().optional(),
-  serverContent: z
-    .object({
-      interrupted: z.boolean().optional(),
-      turnComplete: z.boolean().optional(),
-      inputTranscription: z.object({ text: z.string() }).optional(),
-      outputTranscription: z.object({ text: z.string() }).optional(),
-      modelTurn: z
-        .object({
-          parts: z.array(
-            z.object({
-              inlineData: z
-                .object({ data: z.string(), mimeType: z.string() })
-                .optional(),
-              text: z.string().optional(),
-            }),
-          ),
-        })
-        .optional(),
-    })
-    .optional(),
-});
 interface AudioResources {
   socket?: WebSocket;
   stream?: MediaStream;
@@ -48,10 +23,13 @@ interface AudioResources {
 }
 export function useGeminiVoice(
   language: string,
-  onTranscript: (role: "user" | "assistant", text: string) => void,
+  onTranscript: TranscriptHandler,
+  options: VoiceOptions = {},
 ) {
   const [state, setState] = useState<"idle" | "connecting" | "live">("idle");
   const [error, setError] = useState(false);
+  const [muted, setMuted] = useState(false);
+  const [speaking, setSpeaking] = useState(false);
   const resources = useRef<AudioResources>({
     sources: [],
     nextPlayback: 0,
@@ -62,6 +40,25 @@ export function useGeminiVoice(
   const generation = useRef(0);
   const callback = useRef(onTranscript);
   callback.current = onTranscript;
+  const handlers = useRef(options);
+  handlers.current = options;
+  useEffect(() => {
+    const current = resources.current;
+    if (
+      options.context &&
+      current.ready &&
+      current.socket?.readyState === WebSocket.OPEN
+    )
+      current.socket.send(
+        JSON.stringify({
+          clientContent: {
+            turns: [{ role: "user", parts: [{ text: options.context }] }],
+            turnComplete: false,
+          },
+        }),
+      );
+  }, [options.context]);
+  const calls = useRef(new Set<string>());
   const stop = useCallback(() => {
     generation.current++;
     const current = resources.current;
@@ -69,6 +66,7 @@ export function useGeminiVoice(
     current.stream?.getTracks().forEach((track) => {
       track.stop();
     });
+    handlers.current.onMicrophoneStop?.();
     current.processor?.disconnect();
     current.sources.forEach((source) => {
       try {
@@ -87,6 +85,8 @@ export function useGeminiVoice(
       outputText: "",
     };
     setState("idle");
+    setMuted(false);
+    setSpeaking(false);
   }, []);
   useEffect(() => () => stop(), [stop]);
   function play(encoded: string) {
@@ -117,13 +117,47 @@ export function useGeminiVoice(
       if (!parsed.success) return;
       const message = parsed.data;
       const current = resources.current;
+      for (const call of message.toolCall?.functionCalls ?? []) {
+        if (calls.current.has(call.id)) continue;
+        calls.current.add(call.id);
+        const socket = current.socket;
+        const active = generation.current;
+        const output = handlers.current.executeTool
+          ? await handlers.current.executeTool(call.name, call.args, call.id)
+          : { ok: false, error: "Tool execution unavailable" };
+        if (
+          active === generation.current &&
+          socket?.readyState === WebSocket.OPEN
+        )
+          socket.send(
+            JSON.stringify({
+              toolResponse: {
+                functionResponses: [
+                  { id: call.id, name: call.name, response: output },
+                ],
+              },
+            }),
+          );
+      }
       if (message.setupComplete !== undefined) {
         current.ready = true;
         setState("live");
+        if (handlers.current.context)
+          current.socket?.send(
+            JSON.stringify({
+              clientContent: {
+                turns: [
+                  { role: "user", parts: [{ text: handlers.current.context }] },
+                ],
+                turnComplete: false,
+              },
+            }),
+          );
       }
       const content = message.serverContent;
       if (!content) return;
       if (content.interrupted) {
+        setSpeaking(false);
         current.sources.forEach((source) => {
           try {
             source.stop();
@@ -139,9 +173,12 @@ export function useGeminiVoice(
       if (content.outputTranscription)
         current.outputText += content.outputTranscription.text;
       for (const part of content.modelTurn?.parts ?? [])
-        if (part.inlineData?.mimeType.startsWith("audio/pcm"))
+        if (part.inlineData?.mimeType.startsWith("audio/pcm")) {
+          setSpeaking(true);
           play(part.inlineData.data);
+        }
       if (content.turnComplete) {
+        setSpeaking(false);
         if (current.inputText) callback.current("user", current.inputText);
         if (current.outputText)
           callback.current("assistant", current.outputText);
@@ -159,7 +196,7 @@ export function useGeminiVoice(
     const active = generation.current;
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
-        audio: { channelCount: 1, echoCancellation: true },
+        audio: microphoneConstraints,
       });
       if (generation.current !== active) {
         stream.getTracks().forEach((track) => {
@@ -168,6 +205,8 @@ export function useGeminiVoice(
         return;
       }
       resources.current.stream = stream;
+      handlers.current.onMicrophone?.(stream);
+      calls.current.clear();
       const session = await request("realtime/session", SessionSchema, {
         provider: "gemini",
         language,
@@ -230,5 +269,13 @@ export function useGeminiVoice(
       }
     }
   }
-  return { state, error, start, stop };
+  const toggleMute = useCallback(() => {
+    setMuted((value) => {
+      resources.current.stream?.getAudioTracks().forEach((track) => {
+        track.enabled = value;
+      });
+      return !value;
+    });
+  }, []);
+  return { state, error, start, stop, muted, speaking, toggleMute };
 }
