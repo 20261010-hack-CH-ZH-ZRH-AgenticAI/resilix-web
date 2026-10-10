@@ -1,0 +1,75 @@
+.focus {
+  padding: var(--space-6) var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--border);
+}
+.toolbar {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}
+.toolbar label,
+.toolbar button {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 0.65rem;
+  color: var(--secondary);
+  cursor: pointer;
+}
+.toolbar button {
+  border: 1px solid var(--border);
+  background: var(--elevated);
+  border-radius: var(--radius-pill);
+  padding: var(--space-2) var(--space-3);
+}
+.toolbar input {
+  accent-color: var(--focus);
+}
+.notice {
+  font-size: 0.64rem;
+  line-height: 1.6;
+  color: var(--secondary);
+  text-align: center;
+  max-width: 35rem;
+  margin: var(--space-3) auto var(--space-2);
+}
+.settings {
+  font-size: 0.62rem;
+  color: var(--secondary);
+  text-align: center;
+}
+.settings summary {
+  cursor: pointer;
+}
+.settings summary svg {
+  margin-right: var(--space-1);
+  vertical-align: middle;
+}
+.settings p {
+  margin-top: var(--space-2);
+}
+.speakers {
+  margin-top: var(--space-3);
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-xs);
+}
+.speakers p {
+  color: var(--secondary);
+  font-size: 0.65rem;
+  margin: var(--space-2) 0;
+}
+.speakers > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.speakers span {
+  background: var(--muted);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-pill);
+}

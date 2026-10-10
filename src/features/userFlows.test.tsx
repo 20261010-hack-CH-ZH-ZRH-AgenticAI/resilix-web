@@ -104,3 +104,47 @@ test("clearing the view discloses that saved conversation context remains", () =
     "Saved account conversation context remains available to the assistant.",
   );
 });
+
+test("text model choices exclude non-text capabilities without relying on model names", () => {
+  const models = [
+    { id: "gpt-6-astra", purpose: "reasoning", available: true },
+    { id: "gpt-5.6-luna", purpose: "fast", available: true },
+    { id: "gpt-5.6-terra", purpose: ["balanced"], available: true },
+    { id: "gemini-3.8-flash", purpose: "backup", available: false },
+    {
+      id: "nvidia/Nemotron-3-Diarization",
+      purpose: "speaker_segmentation",
+      available: true,
+    },
+    { id: "future-audio-model", purpose: "voice", available: true },
+    { id: "future-asr-model", purpose: "transcription", available: true },
+    { id: "future-visual-model", purpose: "image", available: true },
+    { id: "unspecified-model", available: true },
+  ];
+  const html = renderToStaticMarkup(
+    <PreferencesProvider>
+      <MapWorkspaceProvider
+        alerts={[]}
+        personal={[]}
+        config={{ mapAttribution: "swisstopo" }}
+      >
+        <Chat models={models} prompt="" active onPromptUsed={() => {}} />
+      </MapWorkspaceProvider>
+    </PreferencesProvider>,
+  );
+  const select =
+    html.match(
+      /<select[^>]*aria-label="Choose model"[^>]*>(.*?)<\/select>/,
+    )?.[1] ?? "";
+  const choices = [...select.matchAll(/<option value="([^"]+)"/g)].map(
+    (match) => match[1],
+  );
+  expect(choices).toEqual([
+    "auto",
+    "gpt-6-astra",
+    "gpt-5.6-luna",
+    "gpt-5.6-terra",
+    "gemini-3.8-flash",
+  ]);
+  expect(select).toContain('<option value="gemini-3.8-flash" disabled="">');
+});
