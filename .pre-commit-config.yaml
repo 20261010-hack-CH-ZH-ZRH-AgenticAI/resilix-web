@@ -1,0 +1,9 @@
+repos:
+  - repo: local
+    hooks:
+      - id: resilix-secret-scan
+        name: Resilix staged secret scan
+        entry: python3 scripts/secret-scan.py --staged
+        language: system
+        pass_filenames: false
+        always_run: true
