@@ -7,6 +7,7 @@ import { Chat } from "@/features/chat/Chat";
 import { Dashboard } from "@/features/dashboard/Dashboard";
 import { PersonalAlertDialog } from "@/features/dashboard/PersonalAlertDialog";
 import { Landing } from "@/features/landing/Landing";
+import { MapWorkspaceProvider } from "@/features/maps/MapWorkspaceProvider";
 import { WorkflowPanel } from "@/features/workflows/WorkflowPanel";
 import { useSituation } from "@/hooks/useSituation";
 import {
@@ -130,159 +131,168 @@ export function App({ showLogin = false }: { showLogin?: boolean }) {
       </>
     );
   return (
-    <div className={styles.app}>
-      {sidebar && (
-        <button
-          type="button"
-          className={styles.overlay}
-          onClick={() => setSidebar(false)}
-          aria-label={t("close")}
-        />
-      )}
-      <aside
-        className={`${styles.sidebar} ${sidebar ? styles.sidebarOpen : ""}`}
-      >
-        <div className={styles.sidebarBrand}>
-          <Brand />
-        </div>
-        <p className={styles.sectionLabel}>{t("workspace")}</p>
-        <nav className={styles.navigation}>
-          {navigation.map((item) => (
-            <button
-              type="button"
-              key={item.id}
-              className={`${styles.navButton} ${view === item.id ? styles.navActive : ""}`}
-              onClick={() => navigate(item.id)}
-              aria-current={view === item.id ? "page" : undefined}
-            >
-              <Icon name={item.icon} />
-              {t(item.label)}
-              {item.id === "alerts" && situation.personal.length > 0 && (
-                <span className={styles.navCount}>
-                  {situation.personal.length}
-                </span>
-              )}
-            </button>
-          ))}
-        </nav>
-        <p className={styles.sectionLabel}>{t("resources")}</p>
-        <Link className={styles.navButton} href="/deck/JO202610101600">
-          <Icon name="layers" />
-          {t("pitch")}
-        </Link>
-        {install && (
+    <MapWorkspaceProvider
+      key={user.id}
+      alerts={situation.alerts}
+      personal={situation.personal}
+      config={situation.config}
+    >
+      <div className={styles.app}>
+        {sidebar && (
           <button
             type="button"
-            className={styles.navButton}
-            onClick={async () => {
-              await install.prompt();
-              await install.userChoice;
-              setInstall(undefined);
-            }}
-          >
-            <Icon name="download" />
-            {t("install")}
-          </button>
+            className={styles.overlay}
+            onClick={() => setSidebar(false)}
+            aria-label={t("close")}
+          />
         )}
-        <div className={styles.sidebarBottom}>
-          <div className={styles.helpCard}>
-            <Icon name="shield" />
-            <strong>{t("urgentHelp")}</strong>
-            <p>{t("emergency")}</p>
-            <a href="tel:112">112 ↗</a>
+        <aside
+          className={`${styles.sidebar} ${sidebar ? styles.sidebarOpen : ""}`}
+        >
+          <div className={styles.sidebarBrand}>
+            <Brand />
           </div>
-          <div className={styles.userRow}>
-            <span className={styles.avatar}>
-              {user.name
-                .split(" ")
-                .map((value) => value[0])
-                .slice(0, 2)
-                .join("")
-                .toUpperCase()}
-            </span>
-            <div className={styles.userName}>
-              {user.name}
-              <span className={styles.userType}>
-                {t(user.is_demo ? "demoSession" : "ownerOnly")}
-              </span>
-            </div>
+          <p className={styles.sectionLabel}>{t("workspace")}</p>
+          <nav className={styles.navigation}>
+            {navigation.map((item) => (
+              <button
+                type="button"
+                key={item.id}
+                className={`${styles.navButton} ${view === item.id ? styles.navActive : ""}`}
+                onClick={() => navigate(item.id)}
+                aria-current={view === item.id ? "page" : undefined}
+              >
+                <Icon name={item.icon} />
+                {t(item.label)}
+                {item.id === "alerts" && situation.personal.length > 0 && (
+                  <span className={styles.navCount}>
+                    {situation.personal.length}
+                  </span>
+                )}
+              </button>
+            ))}
+          </nav>
+          <p className={styles.sectionLabel}>{t("resources")}</p>
+          <Link className={styles.navButton} href="/deck/JO202610101600">
+            <Icon name="layers" />
+            {t("pitch")}
+          </Link>
+          {install && (
             <button
               type="button"
-              className={styles.logout}
-              onClick={signOut}
-              aria-label={t("signOut")}
-              title={t("signOut")}
+              className={styles.navButton}
+              onClick={async () => {
+                await install.prompt();
+                await install.userChoice;
+                setInstall(undefined);
+              }}
             >
-              <Icon name="logout" width={17} />
+              <Icon name="download" />
+              {t("install")}
             </button>
-          </div>
-        </div>
-      </aside>
-      <div className={styles.body}>
-        <header className={styles.topbar}>
-          <div className={styles.breadcrumbs}>
-            <div className={styles.mobileMenu}>
-              <ActionButton
-                compact
-                variant="ghost"
-                onClick={() => setSidebar(true)}
-                aria-label={t("menu")}
-              >
-                <Icon name="grid" />
-              </ActionButton>
+          )}
+          <div className={styles.sidebarBottom}>
+            <div className={styles.helpCard}>
+              <Icon name="shield" />
+              <strong>{t("urgentHelp")}</strong>
+              <p>{t("emergency")}</p>
+              <a href="tel:112">112 ↗</a>
             </div>
-            <span>Resilix</span>
-            <Icon name="chevron" width={13} />
-            <span>
-              {t(
-                navigation.find((item) => item.id === view)?.label ??
-                  "overview",
-              )}
-            </span>
+            <div className={styles.userRow}>
+              <span className={styles.avatar}>
+                {user.name
+                  .split(" ")
+                  .map((value) => value[0])
+                  .slice(0, 2)
+                  .join("")
+                  .toUpperCase()}
+              </span>
+              <div className={styles.userName}>
+                {user.name}
+                <span className={styles.userType}>
+                  {t(user.is_demo ? "demoSession" : "ownerOnly")}
+                </span>
+              </div>
+              <button
+                type="button"
+                className={styles.logout}
+                onClick={signOut}
+                aria-label={t("signOut")}
+                title={t("signOut")}
+              >
+                <Icon name="logout" width={17} />
+              </button>
+            </div>
           </div>
-          <div className={styles.headerActions}>
-            <span className={styles.onlineStatus}>
-              <i className={styles.onlineDot} />
-              {t(situation.connected ? "connected" : "reconnecting")}
-            </span>
-            <Preferences />
-          </div>
-        </header>
-        {!online && <output className={styles.offline}>{t("offline")}</output>}
-        <main className={styles.content}>
-          {(error || situation.error) && (
-            <p className={styles.error} role="alert">
-              {t(error || situation.error || "errorUnknown")}
-            </p>
+        </aside>
+        <div className={styles.body}>
+          <header className={styles.topbar}>
+            <div className={styles.breadcrumbs}>
+              <div className={styles.mobileMenu}>
+                <ActionButton
+                  compact
+                  variant="ghost"
+                  onClick={() => setSidebar(true)}
+                  aria-label={t("menu")}
+                >
+                  <Icon name="grid" />
+                </ActionButton>
+              </div>
+              <span>Resilix</span>
+              <Icon name="chevron" width={13} />
+              <span>
+                {t(
+                  navigation.find((item) => item.id === view)?.label ??
+                    "overview",
+                )}
+              </span>
+            </div>
+            <div className={styles.headerActions}>
+              <span className={styles.onlineStatus}>
+                <i className={styles.onlineDot} />
+                {t(situation.connected ? "connected" : "reconnecting")}
+              </span>
+              <Preferences />
+            </div>
+          </header>
+          {!online && (
+            <output className={styles.offline}>{t("offline")}</output>
           )}
-          {view === "supervisor" && <WorkflowPanel />}
-          {view !== "chat" && view !== "supervisor" && (
-            <Dashboard
-              view={view}
-              {...situation}
-              onCreate={() => setCreate(true)}
-              onAsk={ask}
-              onRefresh={situation.refresh}
-              onDelete={remove}
-              onView={navigate}
-            />
-          )}
-          <div hidden={view !== "chat"}>
-            <Chat
-              models={situation.models}
-              prompt={prompt}
-              active={view === "chat"}
-              onPromptUsed={onPromptUsed}
-            />
-          </div>
-        </main>
-        <footer className={styles.legal}>{t("boundary")}</footer>
+          <main className={styles.content}>
+            {(error || situation.error) && (
+              <p className={styles.error} role="alert">
+                {t(error || situation.error || "errorUnknown")}
+              </p>
+            )}
+            {view === "supervisor" && <WorkflowPanel />}
+            {view !== "chat" && view !== "supervisor" && (
+              <Dashboard
+                view={view}
+                {...situation}
+                onCreate={() => setCreate(true)}
+                onAsk={ask}
+                onRefresh={situation.refresh}
+                onDelete={remove}
+                onView={navigate}
+              />
+            )}
+            <div hidden={view !== "chat"}>
+              <Chat
+                models={situation.models}
+                prompt={prompt}
+                active={view === "chat"}
+                onPromptUsed={onPromptUsed}
+              />
+            </div>
+          </main>
+          <footer className={styles.legal}>{t("boundary")}</footer>
+        </div>
+        <PersonalAlertDialog
+          open={create}
+          onClose={() => setCreate(false)}
+          onCreated={situation.refresh}
+        />
       </div>
-      <PersonalAlertDialog
-        open={create}
-        onClose={() => setCreate(false)}
-        onCreated={situation.refresh}
-      />
-    </div>
+    </MapWorkspaceProvider>
   );
 }

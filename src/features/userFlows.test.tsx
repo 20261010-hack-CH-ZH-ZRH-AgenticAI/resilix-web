@@ -4,11 +4,18 @@ import { createAlert, sendChat } from "@/lib/api/client";
 import { PreferencesProvider } from "@/lib/i18n/Provider";
 import { Chat } from "./chat/Chat";
 import { PersonalAlertDialog } from "./dashboard/PersonalAlertDialog";
+import { MapWorkspaceProvider } from "./maps/MapWorkspaceProvider";
 
 test("the default chat selection sends auto routing and the requested language", async () => {
   const html = renderToStaticMarkup(
     <PreferencesProvider>
-      <Chat models={[]} prompt="" active onPromptUsed={() => {}} />
+      <MapWorkspaceProvider
+        alerts={[]}
+        personal={[]}
+        config={{ mapAttribution: "swisstopo" }}
+      >
+        <Chat models={[]} prompt="" active onPromptUsed={() => {}} />
+      </MapWorkspaceProvider>
     </PreferencesProvider>,
   );
   const modelSelect = html.match(
@@ -83,7 +90,13 @@ test("the Moderate personal-alert choice sends the backend moderate severity", a
 test("clearing the view discloses that saved conversation context remains", () => {
   const html = renderToStaticMarkup(
     <PreferencesProvider>
-      <Chat models={[]} prompt="" active onPromptUsed={() => {}} />
+      <MapWorkspaceProvider
+        alerts={[]}
+        personal={[]}
+        config={{ mapAttribution: "swisstopo" }}
+      >
+        <Chat models={[]} prompt="" active onPromptUsed={() => {}} />
+      </MapWorkspaceProvider>
     </PreferencesProvider>,
   );
   expect(html).toContain('aria-label="Clear view"');

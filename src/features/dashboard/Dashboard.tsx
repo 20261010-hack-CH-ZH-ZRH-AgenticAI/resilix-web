@@ -1,7 +1,8 @@
 "use client";
-import { SituationMap } from "@resilix/ui-canvas";
 import { ActionButton, Badge, Icon, MetricCard } from "@resilix/ui-components";
 import { useState } from "react";
+import { MapScene } from "@/features/maps/MapScene";
+import { RoutePlanner } from "@/features/maps/RoutePlanner";
 import type { Alert, Feed, Model, PublicConfig } from "@/lib/api/client";
 import { usePreferences } from "@/lib/i18n/Provider";
 import { AlertDetails, AlertList } from "./AlertList";
@@ -30,7 +31,6 @@ export function Dashboard({
   alerts,
   personal,
   models,
-  config,
   updated,
   feed,
   onCreate,
@@ -41,13 +41,7 @@ export function Dashboard({
 }: DashboardProps) {
   const { t, language } = usePreferences();
   const [selected, setSelected] = useState<string>();
-  const [filter, setFilter] = useState<"all" | "public" | "personal">("all");
-  const visible =
-    filter === "personal" || view === "alerts"
-      ? personal
-      : filter === "public"
-        ? alerts
-        : [...alerts, ...personal];
+  const visible = view === "alerts" ? personal : [...alerts, ...personal];
   const chosen = [...alerts, ...personal].find(
     (alert) => alert.id === selected,
   );
@@ -151,42 +145,10 @@ export function Dashboard({
           </div>
           {view !== "alerts" && (
             <>
-              <div className={styles.mapFilters}>
-                {(["all", "public", "personal"] as const).map((value) => (
-                  <button
-                    type="button"
-                    key={value}
-                    className={filter === value ? styles.filterActive : ""}
-                    onClick={() => setFilter(value)}
-                  >
-                    {t(
-                      value === "all"
-                        ? "all"
-                        : value === "public"
-                          ? "publicAlerts"
-                          : "privateAlerts",
-                    )}
-                  </button>
-                ))}
-              </div>
               <div
                 className={`${styles.mapWrap} ${view === "map" ? styles.mapExpanded : ""}`}
               >
-                <SituationMap
-                  markers={visible}
-                  selected={selected}
-                  onSelect={select}
-                  tileUrl={config.mapTileUrl}
-                  attribution={config.mapAttribution}
-                  attributionUrl={config.mapAttributionUrl}
-                  labels={{
-                    zoomIn: t("zoomIn"),
-                    zoomOut: t("zoomOut"),
-                    reset: t("resetMap"),
-                    unavailable: t("mapUnavailable"),
-                    map: t("liveMap"),
-                  }}
-                />
+                <MapScene selected={selected} onSelect={select} />
               </div>
               <div className={styles.mapLegend}>
                 <span>
@@ -218,6 +180,7 @@ export function Dashboard({
           />
         </section>
         <aside className={styles.rightColumn}>
+          {view !== "alerts" && <RoutePlanner />}
           {chosen ? (
             <AlertDetails
               alert={chosen}
